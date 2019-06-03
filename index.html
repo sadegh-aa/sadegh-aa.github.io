@@ -67,7 +67,6 @@ body {
 	span.conf {
 		font-size:10pt;
 		color: #111;
-		font-weight:italic;
 	}
 	span.PDF {
 		font-size:10pt;
@@ -94,7 +93,7 @@ div.bib{
 		background:#dddddd;
 		width:400px;
 		border-radius:15px;
-		font-size:80%;
+		font-size:100%;
 }
 
 div.abstract{
@@ -104,7 +103,7 @@ div.abstract{
 		background:#dddddd;
 		width:600px;
 		border-radius:15px;
-		font-size:80%;
+		font-size:100%;
 }
 
 img{border:1px solid #;
@@ -148,7 +147,7 @@ College of Engineering and Computer Science, Australian National University, Can
 <br/><hr/>
 
 <div id="photo">
-<img onclick="showaboutMeDisplay();" style="height: 150px;float:left;margin:5px 5px"  src="/images/sadegh.png">
+<img style="height: 150px;float:left;margin:5px 5px"  src="/images/sadegh.png">
 
 <div id="divabout" class="ex" >
 <p>
@@ -212,6 +211,12 @@ College of Engineering and Computer Science, Australian National University, Can
 			}</br>
 			<button class="close" onclick="document.getElementById('AliakbarianACCV18').style.display='none'" ><font color=red>&times;</font></button>							
                     </div>	
+	<a onclick="javascript:ShowHide(&#39;AliakbarianACCV18abs&#39;)" href="javascript:;" style="font-size:10pt;color: #555;" >Abstract</a>
+                    <div class="abstract" id="AliakbarianACCV18abs" style="display: none;">
+			    Action anticipation is critical in scenarios where one needs to react before the action is finalized. This is, for instance, the case in automated driving, where a car needs to, eg, avoid hitting pedestrians and respect traffic lights. While solutions have been proposed to tackle subsets of the driving anticipation tasks, by making use of diverse, task-specific sensors, there is no single dataset or framework that addresses them all in a consistent manner. In this paper, we therefore introduce a new, large-scale dataset, called VIENA2, covering 5 generic driving scenarios, with a total of 25 distinct action classes. It contains more than 15K full HD, 5s long videos acquired in various driving conditions, weathers, daytimes and environments, complemented with a common and realistic set of sensor measurements. This amounts to more than 2.25 M frames, each annotated with an action label, corresponding to 600 samples per action class. We discuss our data acquisition strategy and the statistics of our dataset, and benchmark state-of-the-art action anticipation techniques, including a new multi-modal LSTM architecture with an effective loss function for action anticipation in driving scenarios. </br>
+			<button class="close" onclick="document.getElementById('AliakbarianACCV18abs').style.display='none'" ><font color=red>&times;</font></button>							
+                    </div>	
+
 	</span></br>	
 	</div>
 </td>
