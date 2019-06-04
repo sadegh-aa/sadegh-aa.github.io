@@ -1,5 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "bootstrap/base.html" %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
   <head>
     <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
 <meta name="description" content="I'm a PhD student at the Australian National University and Australian Centre for Robotic Vision (ACRV). I'm honored to work under supervision of Dr. Lars Petersson (ANU/CSIRO), Dr. Mathieu Salzmann (EPFL), and Dr. Basura Fernando (ACRV/A-STAR) and have pieces of advice from Dr. Stephen Gould (ANU/ACRV).
@@ -136,7 +141,8 @@ a:visited {
 	
 </style>
   </head>
-<body>
+{% block content %}
+
 
 <h1>Sadegh Aliakbarian’s homepage</h1>
 <a href="mailto:sadegh.aliakbarian@anu.edu.au">sadegh[dot]aliakbarian[at]anu[dot]edu[dot]au</a><br/>
@@ -412,6 +418,6 @@ Pixel-level annotations are expensive and time consuming to obtain. Hence, weak 
 </ul>
 </p>
 
-</body>
-</html>
+{% endblock %}
+
 
