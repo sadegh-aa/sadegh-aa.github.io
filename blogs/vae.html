@@ -52,6 +52,13 @@ His areas of interests are in Machine Learning and AI, with focus on generative 
         </script>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+	  
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
  </head>
  
  
@@ -59,7 +66,7 @@ His areas of interests are in Machine Learning and AI, with focus on generative 
 <div class="panel panel-default">
       <div class="panel-heading"><h4>News</h4></div>
       <div class="panel-body">
- Consider we have a model $$p_\theta(x, z)$$, that works with a set of observed variables $$x$$, which we have access to given a dataset, and a set of unobserved \emph{latent} variables $$z$$, which typically are not available in the dataset. This model $$p_\theta(x, z)$$ aims to model the observations, i.e., $$x$$ through a neural network parameterized with $$\theta$$. The likelihood of the data can then be computed as the marginal distribution over the observed variables.
+ Consider we have a model $p_\theta(x, z)$, that works with a set of observed variables $$x$$, which we have access to given a dataset, and a set of unobserved \emph{latent} variables $$z$$, which typically are not available in the dataset. This model $$p_\theta(x, z)$$ aims to model the observations, i.e., $$x$$ through a neural network parameterized with $$\theta$$. The likelihood of the data can then be computed as the marginal distribution over the observed variables.
 	
 	      
 </div>
