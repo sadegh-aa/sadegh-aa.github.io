@@ -1,0 +1,60 @@
+<!--{% extends "bootstrap/base.html" %}-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+  <head>
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+<meta name="description" content="Sadegh Aliakbarian is PhD student at the Australian National University and Australian Centre for Robotic Vision (ACRV). I'm honored to work under supervision of Dr. Lars Petersson (ANU/CSIRO), Dr. Mathieu Salzmann (EPFL), and Dr. Basura Fernando (ACRV/A-STAR) and have pieces of advice from Dr. Stephen Gould (ANU/ACRV).
+His areas of interests are in Machine Learning and AI, with focus on generative models and deep learning approaches for computer vision problems.">
+<meta name="keywords" content="Australia, Canberra, Australian Centre for Robotic Vision, Data61, ANU, CSIRO, ACRV, Machine Learning, Computer Vision, Generative Models, The Australian National University, Action Recognition, Action Anticipation, VAE, Variational Autoencoders, conditional VAE, CVAE, Posterior Collapse, Semantic Segmentation, Weakly-supervised, Video analysis, pose, pose estimation, Human Motion Prediction">
+<meta name="author" content="Sadegh Aliakbarian">
+    <title>Sadegh's homepage</title>
+    
+  <script language="JavaScript">
+        function ShowHide(divId)
+        {
+            if(document.getElementById(divId).style.display == 'none')
+            {
+                document.getElementById(divId).style.display='block';
+            }
+            else
+            {
+                document.getElementById(divId).style.display = 'none';
+            }
+        }
+		
+		function showaboutMeDisplay() {
+				if (document.getElementById("divabout").style.display == "none")
+				{
+					document.getElementById("divabout").style.display = "block";
+				}
+				else
+				{
+					document.getElementById("divabout").style.display = "none";
+				}
+		}
+		
+		function showAbstract(divId)
+		{
+			if(document.getElementById(divId).style.display == 'none')
+            {
+                document.getElementById(divId).style.display='block';
+            }
+            else
+            {
+                document.getElementById(divId).style.display = 'none';
+            }
+		}
+		
+        </script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+ </head>
+ 
+ 
+ <div class="container">
+ Consider we have a model $p_\theta(x, z)$, that works with a set of observed variables $x$, which we have access to given a dataset, and a set of unobserved \emph{latent} variables $z$, which typically are not available in the dataset. This model $p_\theta(x, z)$ aims to model the observations, i.e., $x$ through a neural network parameterized with $\theta$. The likelihood of the data can then be computed as the marginal distribution over the observed variables
+ </div>
