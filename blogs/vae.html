@@ -77,6 +77,71 @@ His areas of interests are in Machine Learning and AI, with focus on generative 
  Consider we have a model $p_\theta(x, z)$, that works with a set of observed variables $x$, which we have access to given a dataset, and a set of unobserved <i>latent</i> variables $z$, which typically are not available in the dataset. This model $p_\theta(x, z)$ aims to model the observations, i.e., $x$ through a neural network parameterized with $\theta$. The likelihood of the data can then be computed as the marginal distribution over the observed variables.
 	
 	      
+
+$$
+    p_\theta(x) = \int_z p_\theta(x, z)dz
+$$
+which is also called the marginal likelihood or the evidence of a model. $p_\theta(x, z)$ is called a deep latent variable model, or DLVM in short, since its distributions are parameterized by a neural network $\theta$. In a simple case, one can define $p_\theta(x, z)$ as a factorization,
+
+$$
+    p_\theta(x, z) = p_\theta(z)p_\theta(x|z)
+$$
+
+In such case, $ p_\theta(z)$ is called the prior distribution over the latent variable $z$. Learning the maximum likelihood in such model is not straightforward since $p_\theta(x)$ is not tractable. This is related to the intractability of the posterior distribution $p_\theta(z|x)$, which can be computed as 
+
+$$
+    p_\theta(z|x) = \frac{p_\theta(x, z)}{p_\theta(x)}
+$$
+
+To solve the maximum likelihood problem, we would like to have $p_\theta(x|z)$ and $p_\theta(z)$. Using \emph{Variational Inference}, we aim to approximate the true posterior $p_\theta(z|x)$ with another distribution $q_\phi(z|x)$ which is computed with another neural network parameterized with $\phi$ (called variational parameters), such that $q_\phi(z|x)\simeq p_\theta(z|x)$. Using such approximation, \emph{Variational Autoencoders}~\cite{kingma2013auto}, or VAEs in short, are able to optimize the marginal likelihood in a tractable way. The optimization objective of the VAEs is variational lower bound, also known as evidence lower bound, or ELBO in short. Recall that variational inference aims to find an approximation of the posterior that represent the true one. One way to do this is to minimize the divergence between the approximate and true posterior using Kullback–Leibler divergence, or KL divergence in short, that is,
+
+$$
+    D_{KL}\Big[q_\phi(z|x) || p_\theta(z|x)\Big] = \sum_{z\sim q_\phi(z|x)}q_\phi(z|x) \log \frac{q_\phi(z|x)}{p_\theta(z|x)}
+$$
+
+This can be seen as an expectation, 
+
+$$
+    D_{KL}\big[q_\phi(z|x) || p_\theta(z|x)\big] = \mathbf{E}_{z\sim q_\phi(z|x)} \bigg[\log \frac{q_\phi(z|x)}{p_\theta(z|x)}\bigg]  =  \mathbf{E}_{z\sim q_\phi(z|x)} \Big[ \log q_\phi(z|x) - \log p_\theta(z|x) \Big]
+$$
+
+The second term above, i.e., the true posterior, according to the Bayes' theorem~\cite{kendall1948advanced}, can be written as $p_\theta(z|x) = \frac{p_\theta(x|z)p(z)}{p_\theta(x)}$.
+The data distribution $p_\theta(x)$ is independent of the latent variable $z$, thus, can be pulled out of the expectation term, 
+
+$$
+    D_{KL}\big[q_\phi(z|x) || p_\theta(z|x)\big] = \mathbf{E}_{z\sim q_\phi(z|x)} \Big[\log q_\phi(z|x) - \log p_\theta(x|z) - \log p(z) \Big] + \log p_\theta(x)
+$$
+
+By putting the $\log p_\theta(x)$ in the right hand side of the above equation, we can write,
+
+$$
+    D_{KL}\big[q_\phi(z|x) || p_\theta(z|x)\big] - \log p_\theta(x)= \mathbf{E}_{z\sim q_\phi(z|x)} \Big[\log q_\phi(z|x) - \log p_\theta(x|z) - \log p(z) \Big] \nonumber \\
+    \log p_\theta(x) - D_{KL}\big[q_\phi(z|x) || p_\theta(z|x)\big] = \mathbf{E}_{z\sim q_\phi(z|x)} \Big[\log p_\theta(x|z) - \big(\log q_\phi(z|x) - \log p(z)\big) \Big] \nonumber \\
+    = \mathbf{E}_{z\sim q_\phi(z|x)} \Big[\log p_\theta(x|z) \Big] - \mathbf{E}_{z\sim q_\phi(z|x)} \Big[\log q_\phi(z|x) - \log p(z) \Big]
+$$
+
+The second expectation term in above equation, according to definitions, is the KL divergence between the approximate posterior $q_\phi(z|x)$ and the prior $\log p(z)$ distributions. Thus, this can be written as 
+$$
+    \log p_\theta(x) - D_{KL}\big[q_\phi(z|x) || p_\theta(z|x)\big] = \mathbf{E}_{z\sim q_\phi(z|x)} \big[\log p_\theta(x|z) \big] - D_{KL}\big[q_\phi(z|x) || p(z)\big]
+$$
+
+In above equation, $\log p_\theta(x)$ is the log-likelihood of the data which we would like to optimize, $D_{KL}\big[q_\phi(z|x) || p_\theta(z|x)\big]$ is the KL divergence between the approximate and the true posterior distributions, which is not computable, but, according to definitions, we know that is non-negative, $\mathbf{E}_{z\sim q_\phi(z|x)} \big[\log p_\theta(x|z) \big]$ is the reconstruction loss, and $D_{KL}\big[q_\phi(z|x) || p(z)\big]$ is the KL divergence between the approximate posterior distribution and a prior over the latent variable. The last term can be seen as a regularization term over the latent representation. Therefore, the intractability and non-negativity of $D_{KL}\big[q_\phi(z|x) || p_\theta(z|x)\big]$ only allows us to optimize the lower bound on the log-likelihood of the data, 
+
+$$
+\log p_\theta(x) \geq \mathbf{E}_{z\sim q_\phi(z|x)} \big[\log p_\theta(x|z) \big] - D_{KL}\big[q_\phi(z|x) || p(z)\big]
+$$
+which we call variational or evidence lower bound (ELBO). 
+
+In practice, VAEs first learn to generate a latent variable $z$ given the data $x$, i.e., approximate the posterior distribution $q_\phi(z|x)$, the encoder, whose goal is to model the variation of the data. From this latent random variable $z$, VAEs then generate a sample $x$ by learning $p_\theta(x|z)$, the decoder, whose goal is to maximize the log likelihood of the data.
+
+These two networks, i.e., the encoder ($q_\phi(z|x)$) and the decoder ($p_\theta(x|z)$), are trained jointly, using a prior over the latent variable, as mentioned above. This prior is usually the standard Normal distribution, $\mathcal{N}(0,I)$. In practice, the posterior distribution is approximated by a Gaussian $\mathcal{N}(\mu, \sigma^2 I)$, whose parameters are output by the encoder. To facilitate optimization, the reparameterization trick~\cite{kingma2013auto} is used. That is, the latent variable is computed as $z=\mu + \sigma\odot \epsilon$, where $\epsilon$ is a vector sampled from the standard Normal distribution.
+
+As an extension to VAEs, conditional VAEs, or CVAEs~\cite{sohn2015learning} in short, use auxiliary information, i.e., the conditioning variable or observation, to generate the data $x$. In the standard setting, both the encoder and the decoder are conditioned on the conditioning variable $c$. That is, the encoder is denoted as $q_\phi(z|x,c)$ and the decoder as $p_\theta(x|z,c)$. Then, the objective of the model becomes 
+\begin{align}
+    \log p_\theta(x|c) \geq \mathbf{E}_{z\sim q_\phi(z|x)}\big[\log p_\theta(x|z,c)\big] - D_{KL}\big[q_\phi(z|x, c) || p(z|c)\big]\;.
+\end{align}
+
+In practice, conditioning is typically done by concatenation; the input of the encoder is the concatenation of the data $x$ and the condition $c$, i.e., $q_\phi(z| \left[x,c\right])$, and that of the decoder the concatenation of the latent variable $z$ and the condition $c$, i.e., $p_\theta(x|\left[z,c\right])$. Thus, the prior distribution is still $p(z)$, and the latent variable is sampled independently of the conditioning one. It is then left to the decoder to combine the information from the latent and conditioning variables to generate a data sample.
 </div>
 </div>
  </div>
