@@ -1,0 +1,139 @@
+<!--{% extends "bootstrap/base.html" %}-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+  <head>
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+<meta name="description" content="Sadegh Aliakbarian is PhD student at the Australian National University and Australian Centre for Robotic Vision (ACRV). I'm honored to work under supervision of Dr. Lars Petersson (ANU/CSIRO), Dr. Mathieu Salzmann (EPFL), and Dr. Basura Fernando (ACRV/A-STAR) and have pieces of advice from Dr. Stephen Gould (ANU/ACRV).
+His areas of interests are in Machine Learning and AI, with focus on generative models and deep learning approaches for computer vision problems.">
+<meta name="keywords" content="Australia, Canberra, Australian Centre for Robotic Vision, Data61, ANU, CSIRO, ACRV, Machine Learning, Computer Vision, Generative Models, The Australian National University, Action Recognition, Action Anticipation, VAE, Variational Autoencoders, conditional VAE, CVAE, Posterior Collapse, Semantic Segmentation, Weakly-supervised, Video analysis, pose, pose estimation, Human Motion Prediction">
+<meta name="author" content="Sadegh Aliakbarian">
+    <title>Sadegh's Blog</title>
+    
+  <script language="JavaScript">
+        function ShowHide(divId)
+        {
+            if(document.getElementById(divId).style.display == 'none')
+            {
+                document.getElementById(divId).style.display='block';
+            }
+            else
+            {
+                document.getElementById(divId).style.display = 'none';
+            }
+        }
+		
+		function showaboutMeDisplay() {
+				if (document.getElementById("divabout").style.display == "none")
+				{
+					document.getElementById("divabout").style.display = "block";
+				}
+				else
+				{
+					document.getElementById("divabout").style.display = "none";
+				}
+		}
+		
+		function showAbstract(divId)
+		{
+			if(document.getElementById(divId).style.display == 'none')
+            {
+                document.getElementById(divId).style.display='block';
+            }
+            else
+            {
+                document.getElementById(divId).style.display = 'none';
+            }
+		}
+		
+        </script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+	  
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ TeX: { extensions: ["autobold.js", "AMSsymbols.js"] } });
+</script>
+
+<script type="text/javascript"
+	src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+ </head>
+ 
+ 
+ <div class="container">
+	 <br/><br/>
+
+<div class="panel panel-default">
+      <div class="panel-heading">Menu</div>
+      <div class="panel-body">	 
+<a href='https://sadegh-aa.github.io'>Home</a>
+</div></div>
+
+<div class="panel panel-default">
+      <div class="panel-heading"><h4>An Introduction to Variational Autoencoders</h4></div>
+      <div class="panel-body">
+
+<h2>Learning Variations in Human Motion via Mix-and-Match Perturbation</h2>
+Human motion prediction is a stochastic process: Given an observed sequence of poses, multiple future motions are plausible. 
+Existing approaches to modeling this stochasticity typically combine a random noise vector with information about the previous poses. 
+This combination, however, is done in a deterministic manner, which gives the network the flexibility to learn to ignore the random noise. 
+In this work, we introduce an approach to stochastically combine the root of variations with previous pose information, which forces the model to take the noise into account. 
+We exploit this idea for motion prediction by incorporating it into a recurrent encoder-decoder network with a conditional variational autoencoder block that learns to exploit the perturbations. 
+Our experiments demonstrate that our model yields high-quality pose sequences that are much more diverse than those from state-of-the-art stochastic motion prediction techniques. 
+
+<h4>How does Mix-and-Match work?</h4>
+The main limitation of prior work in the area of stochastic motion modeling, lies in the way they fuse the random vector with the conditioning variable, i.e., RNN hidden state or pose, which causes the model to learn to ignore the  randomness and solely exploit the deterministic conditioning information to generate motion. 
+To overcome this, we propose to make it harder for the model to decouple the random variable from the deterministic information. Specifically, we observe that the way the random variable and the conditioning one are combined in existing methods is deterministic. We therefore propose to make this process stochastic.
+
+Similarly to MT-VAE (published in ECCV 2018), we propose to make use of the hidden state as the conditioning variable and generate a perturbed hidden state by combining a part of the original hidden state with the random vector. However, as illustrated in Fig.~\ref{fig:mix_match}, instead of assigning predefined, deterministic indices to each piece of information, such as the first half for the hidden state and the second one for the random vector, we assign the values of hidden state to <i>random</i> indices and the random vector to the complementary ones. 
+
+More specifically, a mix-and-match perturbation takes two vectors of size $L$ as input, say $h_t$ and $z$, and combines them in a stochastic manner. To this end, it relies on two operations. The first one, called <i>Sampling</i>, chooses $\left\lceil\alpha L\right\rceil$ indices uniformly at random among the $L$ possible values, given a sampling rate $0\leq \alpha \leq 1$. Let us denote by ${\cal I} \subseteq\{1,\ldots,L\}$, the resulting set of indices and by ${\cal \bar{I}}$ the complementary set. The second operation, called \textit{Resampling}, then creates a new $L$-dimensional vector whose values at indices in $\mathcal{I}$ are taken as those at corresponding indices in the first input vector and the others at the complementary indices in the second input vector. Note that, the second vector can also have dimension $\left\lfloor(1-\alpha)L\right\rfloor$, and its values be divided among the remaining indices of the output vector.
+
+
+<h2>Mix-and-Match Perturbation for Motion Prediction<h2>
+Let us now describe the way we use our mix-and-match perturbation strategy for motion prediction. To this end, we first discuss the network we rely on during inference, and then explain our training strategy.
+
+<b>Inference.</b> Our model consists of an RNN encoder that takes $t$ poses $x_{1:t}$ as input and outputs an $L$-dimensional hidden vector $h_t$. A random $\left\lceil\alpha L\right\rceil$-dimensional portion of this hidden vector, $h_t^\mathcal{I}$, is then combined with an $\left\lfloor(1-\alpha)L\right\rfloor$-dimensional random vector $z\sim\mathcal{N}(0,I)$ via our mix-and-match perturbation strategy.
+The resulting $L$-dimensional output is passed through a small neural network that reduces its size to $\left\lceil\alpha L\right\rceil$, and then fused with the remaining $\left\lfloor(1-\alpha)L\right\rfloor$-dimensional portion of the hidden state, $h_t^\mathcal{\bar{I}}$. This, in turn, is passed through the VAE decoder to produce the final hidden state $h_z$, from which the future poses $x_{t+1:T}$ are obtained via the RNN decoder.
+
+<b>Training.</b> During training, we aim to learn both the RNN parameters and the CVAE ones. Because the CVAE is an autoencoder, it needs to take as input information about future poses. To this end, we complement our inference architecture with an additional RNN future encoder (see the figures in main paper). Note that, in this architecture, we incorporate an additional mix-and-match perturbation that fuses the hidden state of the RNN past encoder $h_t$ with that of the RNN future encoder $h_T$ and forms $h_{tT}^p$. This allows us to condition the VAE encoder in a manner similar to the decoder.
+Note that, for each mini batch, we use the same set of sampled indices for all mix-and-match perturbation steps throughout the network. Furthermore, following the standard CVAE strategy, during training, the random vector $z$ is sampled from a distribution $\mathcal{N}(\mu_\theta(x), \Sigma_\theta(x))$, whose mean $\mu_\theta(x)$ and covariance matrix $\Sigma_\theta(x)$ are produced by the CVAE encoder with parameters $\theta$. This is done by the technique of~\cite{kingma2013auto}, which computes $z_p=\mu_\theta(x) + \Sigma_\theta(x)^{\frac{1}{2}} \epsilon$, where $\epsilon\sim\mathcal{N}(0,I)$. Note that, during inference, $z_p=\epsilon$ since we do not have access to $x$, hence to $\mu_\theta(x)$ and $\Sigma_\theta(x)$.
+
+To learn the parameters of our model, we rely on the availability of a dataset $D=\{X_1, X_2, ..., X_N\}$ containing $N$ videos $X_i$ depicting a human performing an action. Each video consists of a sequence of $T$ poses, $X_i=\{x_i^1, x_i^2, ..., x_i^T\}$, and each pose comprises $J$ joints forming a skeleton, $x_i^t=\{x_{i, 1}^t, x_{i, 2}^t, ..., x_{i, J}^t\}$. The pose of each joint is represented as a quaternion. Given this data, we train our model by minimizing a loss function of the form
+\begin{align}
+\mathcal{L} = \frac{1}{N} \sum_{i=1}^N\Big(\mathcal{L}_{rot}(X_i) + \mathcal{L}_{skl}(X_i)\Big) + \lambda\mathcal{L}_{prior}\;.
+\label{eq:stochastic_loss}
+\end{align}
+
+The first term in this loss compares the output of the network with the ground-truth motion using the squared loss. That is, 
+\begin{align}
+\mathcal{L}_{rot}(X_i) = -\frac{1}{T-t}\frac{1}{4J}\sum_{k=t+1}^T\sum_{j=1}^{J}{\|\hat{x}^{k}_{i,j} - x^{k}_{i,j}\|}^2\;,
+\label{eq:loss_quat}
+\end{align}
+where $\hat{x}^{k}_{i,j}$ is the predicted 4D quaternion for the $j^{th}$ joint at time $k$ in sample $i$, and $x^{k}_{i,j}$ the corresponding ground-truth one. The main weakness of this loss is that it treats all joints equally. However, when working with angles, some joints have a much larger influence on the pose than others. For example, because of the kinematic chain, the pose of the shoulder affects that of the rest of the arm, whereas the pose of the wrists has only a minor effect.
+%Relying only on the $\mathcal{L}_{rot}$ is not sufficient for the task of human motion prediction given rotation matrices of joints as the input representation. When dealing with rotation matrices, the error in different joint has different effects on the whole pose since rotating a joint near the root can rotate almost the whole pose while rotating an edge joint, e.g., wrist, as smaller effect on the whole pose when reconstructed in 3D positions. This is simply because when computing forward kinematics, the small error in root joint will be accumulated until reaching edge joints. 
+To take this into account, we define our second loss term as the error in 3D space. That is, 
+\begin{align}
+\mathcal{L}_{skl}(X_i) = -\frac{1}{T-t}\frac{1}{J\times 3}\sum_{k=t+1}^{T}\sum_{j=1}^{J} \|\hat{p}^{k}_{i,j} - p^{k}_{i,j}\|^2\;,
+\label{eq:loss_skl}
+\end{align}
+where $\hat{p}^{k}_{i,j}$ is the predicted 3D position of joint $j$ at time $k$ in sample $i$ and $p^{k}_{i,j}$ the corresponding ground-truth one. These 3D positions can be computed using forward kinematics, as in~\cite{pavllo2018quaternet,pavllo2019modeling}. Note that, to compute this loss, we first perform a global alignment of the predicted pose and the ground-truth one by rotating the root joint to face [0, 0, 0].
+
+Finally, following standard practice in training VAEs, we define our third loss term as the KL divergence 
+\begin{align}
+    \mathcal{L}_{prior} = -KL\Big(\mathcal{N}(\mu_\theta(x), \Sigma_\theta(x))) \Big\| \mathcal{N}(0,I)\Big)\;.
+    \label{eq:kl}
+\end{align}
+
+In practice, since our VAE appears within a recurrent model, we weigh $\mathcal{L}_{prior}$ by a function $\lambda$ corresponding to the KL annealing weight. We start from $\lambda=0$, forcing the model to encode as much information in $z$ as possible, and gradually increase it to $\lambda=1$, following a logistic curve. 
+</div>
+</div>
+</div>
