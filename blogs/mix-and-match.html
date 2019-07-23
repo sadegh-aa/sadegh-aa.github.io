@@ -98,14 +98,21 @@ Similarly to MT-VAE (published in ECCV 2018), we propose to make use of the hidd
 More specifically, a mix-and-match perturbation takes two vectors of size $L$ as input, say $h_t$ and $z$, and combines them in a stochastic manner. To this end, it relies on two operations. The first one, called <i>Sampling</i>, chooses $\left\lceil\alpha L\right\rceil$ indices uniformly at random among the $L$ possible values, given a sampling rate $0\leq \alpha \leq 1$. Let us denote by ${\cal I} \subseteq\{1,\ldots,L\}$, the resulting set of indices and by ${\cal \bar{I}}$ the complementary set. The second operation, called \textit{Resampling}, then creates a new $L$-dimensional vector whose values at indices in $\mathcal{I}$ are taken as those at corresponding indices in the first input vector and the others at the complementary indices in the second input vector. Note that, the second vector can also have dimension $\left\lfloor(1-\alpha)L\right\rfloor$, and its values be divided among the remaining indices of the output vector.
 
 
-<h2>Mix-and-Match Perturbation for Motion Prediction<h2>
+
+<h2>Mix-and-Match Perturbation for Motion Prediction</h2>
 Let us now describe the way we use our mix-and-match perturbation strategy for motion prediction. To this end, we first discuss the network we rely on during inference, and then explain our training strategy.
+
+<br/>
 
 <b>Inference.</b> Our model consists of an RNN encoder that takes $t$ poses $x_{1:t}$ as input and outputs an $L$-dimensional hidden vector $h_t$. A random $\left\lceil\alpha L\right\rceil$-dimensional portion of this hidden vector, $h_t^\mathcal{I}$, is then combined with an $\left\lfloor(1-\alpha)L\right\rfloor$-dimensional random vector $z\sim\mathcal{N}(0,I)$ via our mix-and-match perturbation strategy.
 The resulting $L$-dimensional output is passed through a small neural network that reduces its size to $\left\lceil\alpha L\right\rceil$, and then fused with the remaining $\left\lfloor(1-\alpha)L\right\rfloor$-dimensional portion of the hidden state, $h_t^\mathcal{\bar{I}}$. This, in turn, is passed through the VAE decoder to produce the final hidden state $h_z$, from which the future poses $x_{t+1:T}$ are obtained via the RNN decoder.
 
+<br/>
+
 <b>Training.</b> During training, we aim to learn both the RNN parameters and the CVAE ones. Because the CVAE is an autoencoder, it needs to take as input information about future poses. To this end, we complement our inference architecture with an additional RNN future encoder (see the figures in main paper). Note that, in this architecture, we incorporate an additional mix-and-match perturbation that fuses the hidden state of the RNN past encoder $h_t$ with that of the RNN future encoder $h_T$ and forms $h_{tT}^p$. This allows us to condition the VAE encoder in a manner similar to the decoder.
 Note that, for each mini batch, we use the same set of sampled indices for all mix-and-match perturbation steps throughout the network. Furthermore, following the standard CVAE strategy, during training, the random vector $z$ is sampled from a distribution $\mathcal{N}(\mu_\theta(x), \Sigma_\theta(x))$, whose mean $\mu_\theta(x)$ and covariance matrix $\Sigma_\theta(x)$ are produced by the CVAE encoder with parameters $\theta$. This is done by the technique of~\cite{kingma2013auto}, which computes $z_p=\mu_\theta(x) + \Sigma_\theta(x)^{\frac{1}{2}} \epsilon$, where $\epsilon\sim\mathcal{N}(0,I)$. Note that, during inference, $z_p=\epsilon$ since we do not have access to $x$, hence to $\mu_\theta(x)$ and $\Sigma_\theta(x)$.
+
+<br/>
 
 To learn the parameters of our model, we rely on the availability of a dataset $D=\{X_1, X_2, ..., X_N\}$ containing $N$ videos $X_i$ depicting a human performing an action. Each video consists of a sequence of $T$ poses, $X_i=\{x_i^1, x_i^2, ..., x_i^T\}$, and each pose comprises $J$ joints forming a skeleton, $x_i^t=\{x_{i, 1}^t, x_{i, 2}^t, ..., x_{i, J}^t\}$. The pose of each joint is represented as a quaternion. Given this data, we train our model by minimizing a loss function of the form
 \begin{align}
@@ -119,7 +126,7 @@ The first term in this loss compares the output of the network with the ground-t
 \label{eq:loss_quat}
 \end{align}
 where $\hat{x}^{k}_{i,j}$ is the predicted 4D quaternion for the $j^{th}$ joint at time $k$ in sample $i$, and $x^{k}_{i,j}$ the corresponding ground-truth one. The main weakness of this loss is that it treats all joints equally. However, when working with angles, some joints have a much larger influence on the pose than others. For example, because of the kinematic chain, the pose of the shoulder affects that of the rest of the arm, whereas the pose of the wrists has only a minor effect.
-%Relying only on the $\mathcal{L}_{rot}$ is not sufficient for the task of human motion prediction given rotation matrices of joints as the input representation. When dealing with rotation matrices, the error in different joint has different effects on the whole pose since rotating a joint near the root can rotate almost the whole pose while rotating an edge joint, e.g., wrist, as smaller effect on the whole pose when reconstructed in 3D positions. This is simply because when computing forward kinematics, the small error in root joint will be accumulated until reaching edge joints. 
+
 To take this into account, we define our second loss term as the error in 3D space. That is, 
 \begin{align}
 \mathcal{L}_{skl}(X_i) = -\frac{1}{T-t}\frac{1}{J\times 3}\sum_{k=t+1}^{T}\sum_{j=1}^{J} \|\hat{p}^{k}_{i,j} - p^{k}_{i,j}\|^2\;,
@@ -134,6 +141,6 @@ Finally, following standard practice in training VAEs, we define our third loss 
 \end{align}
 
 In practice, since our VAE appears within a recurrent model, we weigh $\mathcal{L}_{prior}$ by a function $\lambda$ corresponding to the KL annealing weight. We start from $\lambda=0$, forcing the model to encode as much information in $z$ as possible, and gradually increase it to $\lambda=1$, following a logistic curve. 
-</div>
+	</div>
 </div>
 </div>
