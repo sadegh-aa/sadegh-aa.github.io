@@ -1,0 +1,232 @@
+:root {
+  --primary-color: #546a94; /* A subdued blue-grey for links, borders, and highlights */
+  --text-color: #333;
+  --bg-color: #f9f9f9;
+  --card-bg-color: #fff;
+  --border-color: #eee;
+  --link-hover-color: #3e5072; /* A slightly darker shade for hover effect */
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Reusable link styles */
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: 700;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Layout Sections */
+.sidebar {
+  width: 300px;
+  padding-right: 40px;
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  height: fit-content;
+  margin-top: 20px;
+}
+
+.content {
+  flex: 1;
+  padding-left: 40px;
+}
+
+/* Header & Navigation */
+header {
+  background-color: var(--card-bg-color);
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+nav li {
+  display: inline-block;
+  margin: 0 20px;
+}
+
+nav a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+/* Profile Section */
+.profile {
+  text-align: center;
+}
+
+.profile-photo {
+  width: 180px; /* Increased from 150px */
+  height: 180px; /* Increased from 150px */
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 3px solid var(--primary-color);
+}
+
+.intro {
+  text-align: left;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Contact Info */
+.contact-info {
+  text-align: left;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.contact-info a {
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+}
+
+.contact-info a:hover {
+  color: var(--primary-color);
+}
+
+.contact-info i {
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+/* Headings */
+h1,
+h2,
+h3 {
+  color: var(--text-color);
+}
+
+h1 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+h2 {
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+/* Publications Section */
+/* Update the main card to use Flexbox */
+.publication-card {
+  background-color: var(--card-bg-color);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease-in-out;
+  display: flex; /* Add this line */
+  align-items: flex-start; /* Aligns items to the top */
+}
+
+.publication-card:hover {
+  transform: translateY(-3px);
+}
+
+/* New CSS to style the thumbnail container */
+.publication-thumbnail {
+  flex-shrink: 0; /* Prevents the image from shrinking */
+  margin-right: 20px; /* Adds space between the image and text */
+}
+
+/* Style the image itself */
+.publication-thumbnail img {
+  width: 150px; /* Adjust this size as needed */
+  height: auto;
+  border-radius: 5px; /* Adds a slight curve to the corners */
+}
+
+/* New CSS to style the text content */
+.publication-content {
+  flex-grow: 1; /* Allows the content to fill the remaining space */
+}
+
+/* The rest of your existing publication-card styles for text */
+.publication-card a {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+.publication-card em {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.links a {
+  font-weight: 700;
+  margin-right: 15px;
+  font-size: 0.95em;
+  color: var(--primary-color);
+}
+
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
+  margin-top: 40px;
+}
+
+/* Media Queries (Responsive Design) */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    position: static;
+    margin-top: 0;
+  }
+
+  .content {
+    padding-left: 0;
+  }
+
+  nav ul li {
+    margin: 0 10px;
+  }
+}
